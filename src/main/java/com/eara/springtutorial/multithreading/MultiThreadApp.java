@@ -1,44 +1,37 @@
 package com.eara.springtutorial.multithreading;
 
+import java.util.Random;
+
 public class MultiThreadApp {
 
     public static void main(String[] args) throws InterruptedException {
-        MyCounter myCounter1 = new MyCounter(1);
-        MyCounter myCounter2 = new MyCounter(2);
+        Thread thread1 = new Thread(new MyCounter(1));
+        Thread thread2 = new Thread(new MyCounter(2));
 
-        long startTime = System.currentTimeMillis();
-        myCounter1.start();
-        System.out.println("*************************");
-        myCounter2.start();
-        Thread.sleep(5000);
-        long endTime = System.currentTimeMillis();
-
-        System.out.println(String.format("Total time required to process: %d",
-                endTime - startTime));
+        thread1.start();
+        thread2.start();
     }
 }
 
-class MyCounter extends Thread {
+class MyCounter implements Runnable {
     private int threadNumber;
 
     public MyCounter(int threadNumber) {
         this.threadNumber = threadNumber;
     }
 
-    public void countMe() {
+    @Override
+    public void run() {
+        Random random = new Random();
+
         for (int i = 1; i <= 9 ; i++) {
             try {
-                sleep(500);
+                Thread.sleep(random.nextInt(500));
             } catch (InterruptedException e) {
                 e.printStackTrace();
             }
             System.out.println(String.format("The value of i is: %d and the htread number is: %d",
                     i, threadNumber));
         }
-    }
-
-    @Override
-    public void run() {
-        countMe();
     }
 }
